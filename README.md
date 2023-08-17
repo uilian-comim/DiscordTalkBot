@@ -1,13 +1,55 @@
 # DISCORD TALK BOT
 
-O projeto "Discord Talk Bot" é uma plataforma inovadora que oferece uma interface amigável e interativa para conversar com usuários e servidores no Discord. Com funcionalidades avançadas e uma experiência intuitiva, o bot permite diálogos envolventes e personalizados, elevando a comunicação a um novo nível de praticidade e diversão.
+O projeto Discord Talk Bot é uma plataforma que oferece uma interface simples e eficaz para se comunicar através de chats de texto em servidores e canais privados no Discord. Com o Discord Talk Bot, você pode interagir facilmente com outros usuários que estejam no mesmo servidor compartilhado.
 
 ## Tabela de Conteúdos
 
 -   [Introdução](#introdução)
+-   [Tecnologias Utilizadas](#tecnologias-utilizadas)
 
-## Introdução
+## Tecnologias Utilizadas
 
-O Discord Talk Bot, é um website revolucionário que permite aos usuários do Discord desfrutar de uma experiência de conversação interativa e dinâmica, tudo através do seu próprio bot personalizado. Combinando tecnologias avançadas, como o socket.io para comunicação em tempo real, a biblioteca discord.js para interagir com a API do Discord e o MySQL para armazenar informações importantes, nosso bot oferece uma experiência de uso fluida e responsiva.
+### Front End
 
-As funcionalidades principais do Discord Talk Bot incluem adicionar usuários, entrar em servidores e participar de chats, proporcionando uma maneira simples e envolvente de trocar mensagens através do bot. Através deste website inovador, você poderá aproveitar ao máximo o seu Discord, tornando suas conversas mais interativas e agradáveis do que nunca. Conecte-se ao Discord Talk Bot e experimente essa nova era de conversação interativa!
+-   [Next.js](https://nextjs.org/)
+-   [Daisy-ui](https://daisyui.com/)
+-   [Tailwind CSS](https://tailwindcss.com/)
+-   [Socket.io-client](https://socket.io/docs/v4/client-installation/)
+-   [yup](https://www.npmjs.com/package/yup)
+-   [react-hook-form](https://react-hook-form.com/)
+
+### Back End
+
+-   [Express](https://expressjs.com/)
+-   [Socket.io](https://socket.io/docs/v4/server-installation/)
+-   [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+-   [discord.js](https://discord.js.org/#/)
+-   [prisma](https://www.prisma.io/)
+
+### Linguagem
+
+-   [Typescript](https://www.typescriptlang.org/)
+
+## Requisitos
+
+-   [Node.js](https://nodejs.org/en/) (v18.7.0)
+-   [Docker](https://www.docker.com/)
+-   [Discord Developer](https://discord.com/developers/applications)
+
+## Instalação
+
+```bash
+    # Instalar dependências
+    $ yarn install ou npm install
+
+    # Iniciar o projeto
+    $ yarn dev ou npm run dev
+
+    # Configurar banco de dados
+    $ yarn push ou npm run push
+
+    # Iniciar o servidor
+    $ yarn dev ou npm run dev
+```
+
+## Configuração
