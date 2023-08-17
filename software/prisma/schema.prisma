@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Bot {
+  id             String           @id
+  token          String           @unique
+  avatar_url     String
+  username       String
+  updated_at     DateTime?
+  last_login     DateTime         @default(now())
+  created_at     DateTime         @default(now())
+  users          Users[]
+  guilds         Guilds[]
+  channels_guild Channels_Guild[]
+
+  @@map("bot")
+}
+
+model Users {
+  id         String    @id @default(uuid())
+  user_id    String
+  channel_id String    @unique
+  name       String
+  avatar_url String
+  favorite   Boolean
+  updated_at DateTime?
+  created_at DateTime  @default(now())
+  bot_id     String
+  bot        Bot       @relation(fields: [bot_id], references: [id])
+
+  @@map("users")
+}
+
+model Guilds {
+  id             String           @id @default(uuid())
+  guild_id       String
+  name           String
+  avatar_url     String?          @default("https://cdn.discordapp.com/embed/avatars/1.png")
+  favorite       Boolean
+  created_at     DateTime         @default(now())
+  bot_id         String
+  bot            Bot              @relation(fields: [bot_id], references: [id])
+  channels_guild Channels_Guild[]
+
+  @@map("guilds")
+}
+
+model Channels_Guild {
+  id           String   @id @default(uuid())
+  channel_id   String
+  channel_name String
+  created_at   DateTime @default(now())
+  guild_id     String
+  bot_id       String
+  guild        Guilds   @relation(fields: [guild_id], references: [id])
+  bot          Bot      @relation(fields: [bot_id], references: [id])
+
+  @@map("channels_guild")
+}
