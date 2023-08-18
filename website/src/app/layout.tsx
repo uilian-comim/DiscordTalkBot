@@ -1,3 +1,5 @@
+import { CreateModal, FindModal } from "@/components/Modal";
+import Providers from "@/providers";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -9,9 +11,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="pt-BR" data-theme="luxury">
-            <body className="w-full h-full bg-base-100 tracking-wider">
-                <div className="w-full h-full">{children}</div>
-            </body>
+            <Providers>
+                <body className="w-full h-full bg-base-100 tracking-wider overflow-hidden">
+                    <div className="w-full h-full">{children}</div>
+                    <FindModal />
+                    <CreateModal />
+                </body>
+            </Providers>
         </html>
     );
 }

@@ -1,57 +1,68 @@
-import Image from "next/image";
+"use client";
+
+import { useAuth, useChat, useSocket } from "@/context";
+import { schemas } from "@/utils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { format } from "date-fns";
+import { Notify } from "notiflix";
+import { FormProvider, useForm } from "react-hook-form";
 import { IoSend } from "react-icons/io5";
+import { v4 as uuidv4 } from "uuid";
+import { InferType } from "yup";
+import { Form } from "../Form";
+import { ChatContent } from "./Content";
+
+type FormData = InferType<typeof schemas.chat>;
 
 export function Chat() {
+    const { client } = useAuth();
+    const { SendMessage, setMessage } = useSocket();
+    const { userState, guildState, channelState } = useChat();
+
+    const chatForm = useForm<FormData>({
+        resolver: yupResolver(schemas.chat),
+    });
+
+    const { handleSubmit, reset } = chatForm;
+
+    const onSubmit = async (data: FormData) => {
+        if ((!userState.currentUser && !guildState.currentGuild) || !channelState.currentChannelId || !data.message) return;
+        if (!client)
+            return Notify.failure("Não foi possível enviar a mensagem, verifique o usuário logado.", {
+                clickToClose: true,
+            });
+
+        if (data.message.length > 2000) {
+            return Notify.failure("A mensagem não pode ter mais de 2000 caracteres.", {
+                clickToClose: true,
+            });
+        }
+
+        SendMessage(data.message, client, channelState.currentChannelId);
+        const localMessage = {
+            content: data.message,
+            channel_id: channelState.currentChannelId,
+            id: uuidv4(),
+            author: {
+                id: client.id,
+                name: client.username,
+                avatar_url: client.avatar_url,
+            },
+            createdAt: format(new Date(), "dd/MM/yyyy HH:mm:ss"),
+        };
+        setMessage(localMessage);
+        reset();
+    };
+
     return (
-        <main className="w-full h-full flex flex-col">
-            <div className="w-full h-full flex flex-col p-2">
-                <div className="chat chat-start">
-                    <div className="chat-image avatar">
-                        <div className="w-10 relative rounded-full">
-                            <Image fill={true} src="/avatar.png" alt="avatar" />
-                        </div>
-                    </div>
-                    <div className="chat-header">
-                        Tapete
-                        <time className="text-xs opacity-50">12:45</time>
-                    </div>
-                    <div className="chat-bubble">Mas tu é pa frente loko veio!</div>
-                </div>
-                <div className="chat chat-end">
-                    <div className="chat-image avatar">
-                        <div className="w-10 relative rounded-full">
-                            <Image fill={true} src="/avatar2.png" alt="avatar" />
-                        </div>
-                    </div>
-                    <div className="chat-header">
-                        Eu
-                        <time className="text-xs opacity-50">12:46</time>
-                    </div>
-                    <div className="chat-bubble">Tu também loko!</div>
-                </div>
-                <div className="chat chat-end">
-                    <div className="chat-image avatar">
-                        <div className="w-10 relative rounded-full">
-                            <Image fill={true} src="/avatar2.png" alt="avatar" />
-                        </div>
-                    </div>
-                    <div className="chat-header">
-                        Eu
-                        <time className="text-xs opacity-50">12:49</time>
-                    </div>
-                    <div className="chat-bubble">Da para dar uns balaço no teu tiu?</div>
-                </div>
-            </div>
-            <div className="w-full h-12 flex items-center bg-neutral p-2">
-                <input
-                    type="text"
-                    placeholder="Digite aqui..."
-                    className="w-full h-full bg-transparent outline-none pr-6"
-                />
-                <button className="w-8 h-8 flex items-center justify-center btn-ghost absolute right-2">
-                    <IoSend />
-                </button>
-            </div>
-        </main>
+        <FormProvider {...chatForm}>
+            <ChatContent />
+            {userState.currentUser || guildState.currentGuild ? (
+                <form autoComplete="off" className="w-full h-12 grid grid-cols-chat-footer bg-neutral sticky bottom-0 left-0" onSubmit={handleSubmit(onSubmit)}>
+                    <Form.Input name="message" placeholder="Digite aqui..." addClass="h-full bg-transparent border-none outline-none" />
+                    <Form.Button icon={<IoSend />} type="submit" variant="btn-ghost" addClass="hover:bg-transparent" />
+                </form>
+            ) : null}
+        </FormProvider>
     );
 }

@@ -1,61 +1,186 @@
-import { AiOutlineStar, AiOutlineUserAdd } from "react-icons/ai";
-import { BiBlock } from "react-icons/bi";
-import { TbMailCog } from "react-icons/tb";
+"use client";
+
+import { useChat } from "@/context";
+import { DeleteGuild, FavoriteGuild } from "@/services/Guilds";
+import { Delete, Favorite } from "@/services/Users";
+import { Confirm, Notify } from "notiflix";
+import { AiOutlineDelete, AiOutlineStar } from "react-icons/ai";
+import { ChannelInformation } from "./ChannelInformation";
+import { DesktopActionButtons } from "./DesktopActionButton";
+import { MobileActionButtons } from "./MobileActionButton";
 
 export function Header() {
+    const { userState, guildState, channelState, setChannelState, setUserState, setGuildState } = useChat();
+
+    const usersButton = [
+        {
+            icon: <AiOutlineDelete />,
+            text: "Deletar usuário",
+            onclick: () =>
+                Confirm.show(
+                    "Delete confirm",
+                    `Deseja mesmo deletar o usuário ${userState.currentUser?.name}?`,
+                    "Confirmar",
+                    "Cancelar",
+                    () => {
+                        if (!userState.currentUser) return;
+                        Delete(userState.currentUser.id).then((response) => {
+                            if (response.status === 200 && userState.users) {
+                                const userIndex = userState.users.findIndex((user) => user.id === userState.currentUser?.id);
+                                if (userIndex >= 0) {
+                                    const newUsers = [...userState.users];
+                                    newUsers.splice(userIndex, 1);
+                                    if (newUsers.length > 0) {
+                                        setUserState({ currentUser: null, users: newUsers });
+                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                    } else {
+                                        setUserState({ currentUser: null, users: null });
+                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                    }
+                                    Notify.success(response.message, {
+                                        clickToClose: true,
+                                    });
+                                }
+                            } else {
+                                Notify.failure(response.message, {
+                                    clickToClose: true,
+                                });
+                            }
+                        });
+                    },
+                    () =>
+                        Notify.info("Cancelado com sucesso!", {
+                            clickToClose: true,
+                        }),
+                ),
+        },
+        {
+            icon: <AiOutlineStar />,
+            text: userState.currentUser?.favorite ? "Remover favorito" : "Favoritar usuário",
+            onclick: () =>
+                Confirm.show(
+                    "Favorite confirm",
+                    `Deseja mesmo ${userState.currentUser?.favorite ? "desfavoritar" : "favoritar"} o usuário ${userState.currentUser?.name}?`,
+                    "Confirmar",
+                    "Cancelar",
+                    () => {
+                        if (!userState.currentUser) return;
+                        Favorite(userState.currentUser.id).then((response) => {
+                            if (response.status === 200 && userState.users && response.user) {
+                                const userIndex = userState.users.findIndex((user) => user.id === response.user?.id);
+                                if (userIndex >= 0) {
+                                    const newUsers = [...userState.users];
+                                    newUsers[userIndex] = response.user;
+                                    setUserState({ currentUser: response.user, users: newUsers });
+
+                                    Notify.success(response.message, {
+                                        clickToClose: true,
+                                    });
+                                }
+                            } else {
+                                Notify.failure(response.message, {
+                                    clickToClose: true,
+                                });
+                            }
+                        });
+                    },
+                    () =>
+                        Notify.info("Cancelado com sucesso!", {
+                            clickToClose: true,
+                        }),
+                ),
+        },
+    ];
+    const guildsButton = [
+        {
+            icon: <AiOutlineDelete />,
+            text: "Deletar servidor",
+            onclick: () =>
+                Confirm.show(
+                    "Delete confirm",
+                    `Deseja mesmo deletar o servidor ${guildState.currentGuild?.name}?`,
+                    "Confirmar",
+                    "Cancelar",
+                    () => {
+                        if (!guildState.currentGuild) return;
+                        DeleteGuild(guildState.currentGuild.id).then((response) => {
+                            if (response.status === 200 && guildState.guilds) {
+                                const guildIndex = guildState.guilds.findIndex((guild) => guild.id === guildState.currentGuild?.id);
+                                if (guildIndex >= 0) {
+                                    const newGuilds = [...guildState.guilds];
+                                    newGuilds.splice(guildIndex, 1);
+                                    if (newGuilds.length > 0) {
+                                        setGuildState({ currentGuild: null, guilds: newGuilds });
+                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                    } else {
+                                        setGuildState({ currentGuild: null, guilds: null });
+                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                    }
+                                    Notify.success(response.message, {
+                                        clickToClose: true,
+                                    });
+                                } else {
+                                    Notify.warning("Erro ao apagar dados, clique em recarregar para atualizar.", {
+                                        clickToClose: true,
+                                    });
+                                }
+                            } else {
+                                Notify.failure(response.message, {
+                                    clickToClose: true,
+                                });
+                            }
+                        });
+                    },
+                    () =>
+                        Notify.info("Cancelado com sucesso!", {
+                            clickToClose: true,
+                        }),
+                ),
+        },
+        {
+            icon: <AiOutlineStar />,
+            text: guildState.currentGuild?.favorite ? "Remover favorito" : "Favoritar servidor",
+            onclick: () =>
+                Confirm.show(
+                    "Favorite confirm",
+                    `Deseja mesmo ${guildState.currentGuild?.favorite ? "desfavoritar" : "favoritar"} o servidor ${guildState.currentGuild?.name}?`,
+                    "Confirmar",
+                    "Cancelar",
+                    () => {
+                        if (!guildState.currentGuild) return;
+                        FavoriteGuild(guildState.currentGuild.id).then((response) => {
+                            if (response.status === 200 && response.guild && guildState.guilds) {
+                                const guildIndex = guildState.guilds.findIndex((guild) => guild.id === response.guild?.id);
+                                if (guildIndex >= 0) {
+                                    const newGuilds = [...guildState.guilds];
+                                    newGuilds[guildIndex] = response.guild;
+                                    setGuildState({ currentGuild: response.guild, guilds: newGuilds });
+
+                                    Notify.success(response.message, {
+                                        clickToClose: true,
+                                    });
+                                }
+                            } else {
+                                Notify.failure(response.message, {
+                                    clickToClose: true,
+                                });
+                            }
+                        });
+                    },
+                    () =>
+                        Notify.info("Cancelado com sucesso!", {
+                            clickToClose: true,
+                        }),
+                ),
+        },
+    ];
+
     return (
-        <header className="w-full h-20 bg-base-300 p-2 pl-20 absolute top-0 right-0 md:pl-48 lg:pl-56">
-            <div className="navbar bg-base-300 gap-2">
-                <div className="min-w-max h-full flex flex-col items-start justify-between">
-                    <span className="font-primary uppercase font-medium text-sm">Tapete</span>
-                    <span className="font-primary uppercase font-medium text-sm">Tipo: Usuário</span>
-                </div>
-                <div className="flex justify-end flex-1 px-2 lg:opacity-0 lg:hidden">
-                    <div className="flex items-stretch">
-                        <div className="dropdown dropdown-end">
-                            <label tabIndex={0} className="btn btn-square btn-outline">
-                                <TbMailCog />
-                            </label>
-                            <ul
-                                tabIndex={0}
-                                className="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box w-52 mt-4"
-                            >
-                                <li className="flex flex-row items-center justify-start">
-                                    <span className="font-primary">
-                                        <AiOutlineUserAdd />
-                                        Adicionar usuário
-                                    </span>
-                                </li>
-                                <li className="flex flex-row items-center justify-start">
-                                    <span className="font-primary">
-                                        <BiBlock />
-                                        Bloquear usuário
-                                    </span>
-                                </li>
-                                <li className="flex flex-row items-center justify-start">
-                                    <span className="font-primary">
-                                        <AiOutlineStar />
-                                        Favoritar usuário
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div className="opacity-0 hidden w-full items-center justify-end gap-2 lg:opacity-100 lg:visible lg:flex">
-                    <button className="btn-ghost flex items-center justify-center gap-2 px-4 py-2 font-primary uppercase text-sm tracking-wider bg-base-200 rounded">
-                        <AiOutlineUserAdd />
-                        Adicionar usuário
-                    </button>
-                    <button className="btn-ghost flex items-center justify-center gap-2 px-4 py-2 font-primary uppercase text-sm tracking-wider bg-base-200 rounded">
-                        <BiBlock />
-                        Bloquear usuário
-                    </button>
-                    <button className="btn-ghost flex items-center justify-center gap-2 px-4 py-2 font-primary uppercase text-sm tracking-wider bg-base-200 rounded">
-                        <AiOutlineStar />
-                        Favoritar usuário
-                    </button>
-                </div>
+        <header className="w-full h-20 bg-base-300 p-2 pl-20 fixed top-0 right-0 md:pl-48 lg:pl-56 z-10">
+            <div className="navbar items-center justify-between bg-base-300">
+                <ChannelInformation />
+                <MobileActionButtons guildsButtons={guildsButton} usersButtons={usersButton} />
+                <DesktopActionButtons guildsButtons={guildsButton} usersButtons={usersButton} />
             </div>
         </header>
     );
