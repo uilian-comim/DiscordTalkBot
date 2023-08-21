@@ -15,7 +15,7 @@
         "eslint": "8.45.0",
         "eslint-config-next": "13.4.12",
         "js-cookie": "^3.0.5",
-        "next": "^13.4.18",
+        "next": "^13.4.19",
         "node-emoji": "^2.1.0",
         "notiflix": "^3.2.6",
         "postcss": "8.4.27",

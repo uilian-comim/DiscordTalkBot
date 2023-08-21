@@ -16,6 +16,7 @@ type FormData = InferType<typeof schemas.signin>;
 
 export function LoginContent() {
     const { SetClient } = useAuth();
+
     const signInForm = useForm<FormData>({
         resolver: yupResolver(schemas.signin),
     });
@@ -25,7 +26,7 @@ export function LoginContent() {
         Loading.dots("Conectando-se", {
             clickToClose: false,
         });
-        const response = await signin(data.token).finally(() => Loading.remove());
+        const response = await signin(data.token, data.keep).finally(() => Loading.remove());
 
         if (response.status === 200 && response.access_token && response.user) {
             Cookies.set("access_token", response.access_token);
@@ -33,6 +34,23 @@ export function LoginContent() {
             Notify.success(response.message, {
                 clickToClose: true,
             });
+            if (data.save) {
+                const tokens = Cookies.get("tokens");
+                if (tokens) {
+                    const tokensArray = tokens.split(",");
+                    if (!tokensArray.find((token) => token.split("-")[1] === data.token)) {
+                        Cookies.set("tokens", `${tokens},client:${response.user.username}-${data.token}`);
+                    }
+                    if (data.keep) {
+                        Notify.info("O token será revogado caso você não logue por 7 dias", {
+                            timeout: 20000,
+                            clickToClose: true,
+                        });
+                    }
+                } else {
+                    Cookies.set("tokens", `client:${response.user.username}-${data.token}`);
+                }
+            }
         } else {
             Notify.failure(response.message, {
                 clickToClose: true,
@@ -43,20 +61,16 @@ export function LoginContent() {
     return (
         <FormProvider {...signInForm}>
             <form className="w-full flex flex-col items-center justify-center gap-4" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-                {/* <div className="form-control w-full">
+                <div className="form-control w-full">
                     <Form.Label text="Bot Token" htmlFor="token" />
                     <Form.Input name="token" placeholder="Digite aqui..." />
-                </div> */}
-                <Form.Select name="token" defaultValue="NjIzOTQyMjE0NTMxMjg1MDA0.Gm4FC2.-ZQQamNjlJm_hK6KA-T846MSO9VmRundvklis0">
-                    <option value="MTEzMzg3MDE1OTA0NDU1NDc1Mg.GSqQmS.4-ZXNkPnuI0b9osBe0iN16Bhh9MTHonJo7cjXA">discord_talk_bot</option>
-                    <option value="NjIzOTQyMjE0NTMxMjg1MDA0.Gm4FC2.-ZQQamNjlJm_hK6KA-T846MSO9VmRundvklis0">Albedo</option>
-                </Form.Select>
-                <div className="flex flex-col items-start justify-center gap-2 self-start">
-                    <Form.CheckBox name="save" text="Salvar Token" />
-                    <Form.CheckBox name="keep" text="Manter logado" />
+                </div>
+                <div className="w-full flex flex-col items-start justify-center gap-2 self-start">
+                    <Form.CheckBox name="save" text="Salvar Token" containerAddClass="w-full" />
+                    <Form.CheckBox name="keep" text="Manter logado" containerAddClass="w-full" />
                 </div>
                 <div className="w-full flex flex-col justify-end items-center gap-4">
-                    <Form.Button icon={<MdLogin />} type="submit" text="Conectar-se" variant="btn-neutral" />
+                    <Form.Button icon={<MdLogin />} type="submit" text="Conectar-se" variant="btn-neutral" addClass="flex-1" />
                     <Form.Link href="https://discord.com/developers/applications" icon={<BiLinkExternal />} variant="btn-neutral" text="Discord Developer Portal" />
                 </div>
             </form>

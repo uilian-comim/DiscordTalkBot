@@ -9,9 +9,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     addClass?: string;
 }
 
-export function Input(props: InputProps) {
+export function Input({ name, placeholder, addClass, ...rest }: InputProps) {
     const { register } = useFormContext();
-    return (
-        <input type={props.type || "text"} id={props.name} placeholder={props.placeholder} className={`input input-bordered w-full ${props.addClass}`} {...register(props.name)} />
-    );
+    return <input placeholder={placeholder} type="text" id={name} className={`input input-bordered w-full ${addClass && addClass}`} {...register(name)} {...rest} />;
 }

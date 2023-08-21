@@ -10,7 +10,7 @@ export function Select(props: SelectProps) {
     const { register } = useFormContext();
 
     return (
-        <select className="form-control w-full select" defaultValue={props.defaultValue} {...register(props.name)}>
+        <select className="form-control w-full select" {...register(props.name)} {...props}>
             {props.children}
         </select>
     );

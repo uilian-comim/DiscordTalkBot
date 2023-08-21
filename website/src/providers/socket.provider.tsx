@@ -22,7 +22,7 @@ export default function SocketProvider({ children }: ProviderProps) {
 
     useEffect(() => {
         if (client && !socket.connected) {
-            socket.auth = { username: client.username };
+            socket.auth = { username: client.username, client_id: client.id, token: client.token };
             socket.connect();
         }
 
