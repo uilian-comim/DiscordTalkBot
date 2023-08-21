@@ -6,7 +6,7 @@ import InstanceManager from "src/instances";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function signin(request: Request, response: Response) {
-    const { token } = request.body;
+    const { token, keep } = request.body;
     if (!token) return response.status(400).json({ message: "Token não informado." });
 
     try {
@@ -107,7 +107,7 @@ export default async function signin(request: Request, response: Response) {
             InstanceManager.closeInstance(res.instance_id);
         }
 
-        const access_token = GetToken(result);
+        const access_token = GetToken(result, keep);
 
         await prisma.bot.update({
             where: {

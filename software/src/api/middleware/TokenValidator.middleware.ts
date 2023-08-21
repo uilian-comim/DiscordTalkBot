@@ -27,6 +27,7 @@ export default async function TokenValidator(request: Request, response: Respons
         }
 
         request.body.bot = result;
+        request.body.keep = user.keep;
         next();
     } catch (err: any) {
         if (err.name === "TokenExpiredError") {

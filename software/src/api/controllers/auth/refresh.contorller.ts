@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { GetToken } from "src/api/utils";
 
 export default async function refresh(request: Request, response: Response) {
-    const { bot } = request.body;
+    const { bot, keep } = request.body;
     try {
-        const refresh_token = GetToken(bot);
+        const refresh_token = GetToken(bot, keep);
 
         return response.status(200).json({ message: "Token atualizado com sucesso.", access_token: refresh_token, user: bot });
     } catch (err: any) {
