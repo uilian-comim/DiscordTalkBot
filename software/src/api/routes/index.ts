@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Find from "src/api/controllers/find.controller";
-import GetAll from "src/api/controllers/getAll.controller";
+import GetChannels from "src/api/controllers/get.controller";
 import GetMessages from "src/api/controllers/getMessages.controller";
 import { TokenValidator } from "src/api/middleware";
 import auth from "./auth.routes";
@@ -15,7 +15,7 @@ routes.use(TokenValidator);
 routes.use("/api/users", users);
 routes.use("/api/guilds", guilds);
 routes.use("/api/channels", channels);
-routes.get("/api/get-all", GetAll);
+routes.get("/api/get", GetChannels);
 routes.get("/api/find", Find);
 routes.get("/api/get-messages", GetMessages);
 

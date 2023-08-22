@@ -42,6 +42,8 @@ io.on("connection", (socket: ISocketCustom) => {
 
     socket.join("general");
 
+    socket.join(socket.client_id!);
+
     socket.on("leave_room", (room_id) => leaveRoom(socket, room_id));
 
     socket.on("change_room", (room_id) => changeRoom(socket, room_id));
