@@ -1,10 +1,10 @@
-import { IGetAllResponse } from "@/interface/channels";
+import { IGetChannelsResponse } from "@/interface/channels";
 import Cookies from "js-cookie";
 
-export async function GetAll(): Promise<IGetAllResponse> {
+export async function GetChannels(guildsLoaded: number = 0, usersLoaded: number = 0): Promise<IGetChannelsResponse> {
     const token = Cookies.get("access_token");
-    if (!token) return { message: "Token not found", status: 401, guilds: null, users: null };
-    const response = await fetch("http://localhost:3333/api/get-all", {
+    if (!token) return { message: "Token not found", status: 401, guilds: null, users: null, total: 0 };
+    const response = await fetch(`http://localhost:3333/api/get?usersLoaded=${usersLoaded}&guildsLoaded=${guildsLoaded}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -20,6 +20,7 @@ export async function GetAll(): Promise<IGetAllResponse> {
             status: response.status,
             guilds: null,
             users: null,
+            total: 0,
         };
     } else {
         return {
@@ -27,6 +28,7 @@ export async function GetAll(): Promise<IGetAllResponse> {
             status: response.status,
             guilds: data.guilds,
             users: data.users,
+            total: data.total,
         };
     }
 }

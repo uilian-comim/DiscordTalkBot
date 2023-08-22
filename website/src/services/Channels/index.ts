@@ -1,2 +1,2 @@
 export * from "./find.service";
-export * from "./getAll.service";
+export * from "./get.service";

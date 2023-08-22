@@ -32,10 +32,15 @@ export function Header() {
                                     newUsers.splice(userIndex, 1);
                                     if (newUsers.length > 0) {
                                         setUserState({ currentUser: null, users: newUsers });
-                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                        setChannelState({
+                                            total: guildState.guilds?.length! + newUsers.length,
+                                            oldChannelId: channelState.currentChannelId,
+                                            currentChannelId: null,
+                                            selectedChannelType: null,
+                                        });
                                     } else {
                                         setUserState({ currentUser: null, users: null });
-                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                        setChannelState({ total: 0, oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
                                     }
                                     Notify.success(response.message, {
                                         clickToClose: true,
@@ -111,10 +116,15 @@ export function Header() {
                                     newGuilds.splice(guildIndex, 1);
                                     if (newGuilds.length > 0) {
                                         setGuildState({ currentGuild: null, guilds: newGuilds });
-                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                        setChannelState({
+                                            total: newGuilds.length + userState.users?.length!,
+                                            oldChannelId: channelState.currentChannelId,
+                                            currentChannelId: null,
+                                            selectedChannelType: null,
+                                        });
                                     } else {
                                         setGuildState({ currentGuild: null, guilds: null });
-                                        setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+                                        setChannelState({ total: 0, oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
                                     }
                                     Notify.success(response.message, {
                                         clickToClose: true,

@@ -31,7 +31,7 @@ export function FindModal() {
             setUserState({ currentUser: null, users: response.users });
             setGuildState({ currentGuild: null, guilds: response.guilds });
             setMessageState({ messages: null });
-            setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+            setChannelState({ total: channelState.total, oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
             Notify.success(response.message, {
                 clickToClose: true,
             });
@@ -39,7 +39,7 @@ export function FindModal() {
             setUserState({ currentUser: null, users: null });
             setGuildState({ currentGuild: null, guilds: null });
             setMessageState({ messages: null });
-            setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+            setChannelState({ total: channelState.total, oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
             Notify.failure(response.message, {
                 clickToClose: true,
             });

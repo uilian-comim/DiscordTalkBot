@@ -33,7 +33,7 @@ export function CreateModal() {
             const users = userState.users!;
             users.push(response.user);
             setUserState({ currentUser: userState.currentUser, users: users });
-            setChannelState({ oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
+            setChannelState({ total: channelState.total + 1, oldChannelId: channelState.currentChannelId, currentChannelId: null, selectedChannelType: null });
             setUserState({ users: userState.users, currentUser: null });
             Notify.success(response.message, {
                 clickToClose: true,

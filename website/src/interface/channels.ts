@@ -32,12 +32,13 @@ export interface IChannelsGuild {
     guild_id: string;
 }
 
-export interface IGetAllResponse {
+export interface IGetChannelsResponse {
     status: number;
     message: string;
     information?: string;
     users: Array<IUser> | null;
     guilds: Array<IGuild> | null;
+    total: number;
 }
 
 export interface IGetMessagesResponse {

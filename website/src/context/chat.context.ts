@@ -17,6 +17,7 @@ interface IChannelState {
     currentChannelId: string | null;
     oldChannelId: string | null;
     selectedChannelType: "user" | "guild" | null;
+    total: number;
 }
 
 interface IChatContext {
@@ -32,11 +33,13 @@ interface IChatContext {
         currentChannelId: string | null;
         oldChannelId: string | null;
         selectedChannelType: "user" | "guild" | null;
+        total: number;
     };
     refresh: () => void;
     setUserState: ({ users, currentUser }: IUserState) => void;
     setGuildState: ({ guilds, currentGuild }: IGuildState) => void;
-    setChannelState: ({ currentChannelId, oldChannelId, selectedChannelType }: IChannelState) => void;
+    setChannelState: ({ currentChannelId, oldChannelId, selectedChannelType, total }: IChannelState) => void;
+    getMore: () => void;
 }
 
 export const ChatContext = createContext<IChatContext>({
@@ -52,11 +55,13 @@ export const ChatContext = createContext<IChatContext>({
         currentChannelId: null,
         oldChannelId: null,
         selectedChannelType: null,
+        total: 0,
     },
     refresh: () => {},
     setUserState: ({ users, currentUser }: IUserState) => {},
     setGuildState: ({ guilds, currentGuild }: IGuildState) => {},
-    setChannelState: ({ currentChannelId, oldChannelId, selectedChannelType }: IChannelState) => {},
+    setChannelState: ({ currentChannelId, oldChannelId, selectedChannelType, total }: IChannelState) => {},
+    getMore: () => {},
 });
 
 export function useChat() {
