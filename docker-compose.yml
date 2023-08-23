@@ -1,0 +1,39 @@
+version: "3"
+services:
+    frontend:
+        container_name: dtbfe
+        image: dtbfe
+        build:
+            context: ./website
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        depends_on:
+            - backend
+        restart: always
+    backend:
+        container_name: dtbbe
+        image: dtbbe
+        build:
+            context: ./software
+            dockerfile: Dockerfile
+        ports:
+            - "3333:3333"
+            - "5555:5555"
+        depends_on:
+            - database
+        environment:
+            - DATABASE_URL=mysql://root:12345@dtbdb:3306/discord_talk_bot
+            - API_PORT=3333
+            - SOCKET_PORT=5555
+            - JWT_SECRET_KEY=UwMjB9.BmejMpkH85PcSk7tBrNy_eWkRe98QXrnNLLFGQbHgdw
+        restart: always
+    database:
+        image: mysql:latest
+        container_name: dtbdb
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: 12345
+            MYSQL_DATABASE: discord_talk_bot
+        restart: always
