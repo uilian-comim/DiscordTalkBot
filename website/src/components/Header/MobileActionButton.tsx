@@ -37,7 +37,7 @@ export function MobileActionButtons({ usersButtons, guildsButtons }: MobileButto
                                   </li>
                               ))
                             : guildsButtons.map((value) => (
-                                  <li className="flex flex-row items-center justify-start" key={uuidv4()} onClick={() => value.onclick}>
+                                  <li className="flex flex-row items-center justify-start" key={uuidv4()} onClick={value.onclick}>
                                       <span className="font-primary">
                                           {value.icon}
                                           {value.text}

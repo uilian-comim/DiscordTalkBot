@@ -34,7 +34,7 @@ export function DesktopActionButtons({ usersButtons, guildsButtons }: DesktopBut
                       <button
                           key={uuidv4()}
                           className="btn-ghost flex items-center justify-center gap-2 px-2 py-2 font-primary uppercase text-sm tracking-wider bg-base-200 rounded"
-                          onClick={() => button.onclick()}
+                          onClick={button.onclick}
                       >
                           {button.icon}
                           {button.text}
