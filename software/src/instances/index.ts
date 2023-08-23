@@ -35,7 +35,7 @@ class InstanceManager {
     public static closeInstance(id: string) {
         const index = this.instances.findIndex((instance) => instance.id === id);
         if (index === -1) throw new Error(`[close instance error] - Não foi encontrado index de instancia com o id ${id}`);
-        io.emit("instance:destroy", {
+        io.to(id).emit("instance:destroy", {
             id,
             message: "Instância finalizada, outro usuário se conectou ao mesmo bot",
         });
@@ -43,6 +43,7 @@ class InstanceManager {
         if (!instance) throw new Error(`[close instance error] - Não foi encontrado instancia com o id ${id}`);
         instance.instance.destroy();
         this.instances.splice(index, 1);
+        console.log(`[instance manager] - Instância com id ${id} finalizada.`);
     }
 
     public static getAllInstances(): Array<TInstance> {
