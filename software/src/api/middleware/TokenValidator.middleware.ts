@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "src/api/database";
-import { DecodedToken } from "src/api/utils";
+import { DecodedToken, GetTokenInformation } from "src/api/utils";
+import InstanceManager from "src/instances";
 
 export default async function TokenValidator(request: Request, response: Response, next: NextFunction) {
     const { authorization } = request.headers;
@@ -31,6 +32,12 @@ export default async function TokenValidator(request: Request, response: Respons
         next();
     } catch (err: any) {
         if (err.name === "TokenExpiredError") {
+            try {
+                const user = GetTokenInformation(request.headers.authorization?.split(" ")[1]!);
+                InstanceManager.closeInstance(user.id);
+            } catch (err: any) {
+                console.log(err);
+            }
             return response.status(401).json({ message: "Token expirado." });
         }
         if (err.name === "JsonWebTokenError") {

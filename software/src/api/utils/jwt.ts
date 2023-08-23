@@ -34,3 +34,7 @@ export function DecodedToken(token: string): TUser {
 
     return decode(token) as TUser;
 }
+
+export function GetTokenInformation(token: string): IDecodedToken {
+    return decode(token) as IDecodedToken;
+}
