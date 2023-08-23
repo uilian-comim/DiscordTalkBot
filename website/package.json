@@ -9,19 +9,19 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@hookform/resolvers": "^3.2.0",
-        "autoprefixer": "10.4.14",
+        "@hookform/resolvers": "^3.3.0",
+        "autoprefixer": "10.4.15",
         "date-fns": "^2.30.0",
-        "eslint": "8.45.0",
-        "eslint-config-next": "13.4.12",
+        "eslint": "8.47.0",
+        "eslint-config-next": "13.4.19",
         "js-cookie": "^3.0.5",
         "next": "^13.4.19",
         "node-emoji": "^2.1.0",
         "notiflix": "^3.2.6",
-        "postcss": "8.4.27",
+        "postcss": "8.4.28",
         "react": "18.2.0",
         "react-dom": "18.2.0",
-        "react-hook-form": "^7.45.2",
+        "react-hook-form": "^7.45.4",
         "react-icons": "^4.10.1",
         "react-scroll-to-bottom": "^4.2.0",
         "socket.io-client": "^4.7.2",
@@ -33,16 +33,16 @@
     },
     "devDependencies": {
         "@types/js-cookie": "^3.0.3",
-        "@types/node": "20.4.4",
-        "@types/react": "18.2.15",
+        "@types/node": "20.5.4",
+        "@types/react": "18.2.21",
         "@types/react-dom": "18.2.7",
         "@types/react-scroll-to-bottom": "^4.2.1",
         "@types/uuid": "^9.0.2",
-        "daisyui": "^3.4.0",
-        "prettier": "^3.0.0"
+        "daisyui": "^3.6.1",
+        "prettier": "^3.0.2"
     },
     "optionalDependencies": {
         "bufferutil": "^4.0.7",
-        "utf-8-validate": "^5.0.10"
+        "utf-8-validate": "^6.0.3"
     }
 }
