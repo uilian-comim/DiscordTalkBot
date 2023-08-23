@@ -57,7 +57,7 @@ export function ChannelsList() {
                         type="button"
                         onClick={getMore}
                     >
-                        <span className="h-full flex items-center justify-center">
+                        <span className="h-full flex items-center justify-center text-sm">
                             <BsPlusCircle />
                         </span>
                         <span className="h-full items-center justify-center hidden opacity-0 text-xs tracking-wide uppercase font-semibold md:visible md:flex md:opacity-100">

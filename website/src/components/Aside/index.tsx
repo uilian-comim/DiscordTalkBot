@@ -12,7 +12,7 @@ export function Aside() {
             <ClientInformation />
             <MenuSection />
             <ChannelsList />
-            <span className="text-sm font-semibold uppercase">Total de canais: {channelState.total}</span>
+            <span className="text-sm font-semibold uppercase text-center">Total de canais: {channelState.total}</span>
         </aside>
     );
 }
