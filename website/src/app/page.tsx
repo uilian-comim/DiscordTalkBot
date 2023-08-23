@@ -1,18 +1,7 @@
 import { LoginContent } from "@/PagesContent";
 import { Footer } from "@/components/Footer";
-import { refresh } from "@/services";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Login() {
-    const token = cookies().get("access_token")?.value;
-    if (token) {
-        const response = await refresh(token);
-        if (response.status === 200) {
-            redirect("/home");
-        }
-    }
-
     return (
         <div className="w-full min-h-screen h-full">
             <div className="w-full h-full flex justify-center px-8 py-8 bg-base-100 md:py-12 lg:py-20">
