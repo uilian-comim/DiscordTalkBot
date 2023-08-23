@@ -46,6 +46,25 @@ export default function ChatProvider({ children }: ProviderProps) {
                 );
             }
         });
+        socket.on("guild:ready", (data: any): void => {
+            if (client) {
+                const guilds = guildState.guilds ? [...guildState.guilds!, data.guild] : [data.guild];
+                setGuildState({ guilds, currentGuild: guildState.currentGuild });
+                setChannelState({ ...channelState, total: channelState.total + 1 });
+                Notify.info(data.message, {
+                    clickToClose: true,
+                    pauseOnHover: true,
+                });
+            } else {
+                Notify.info(
+                    `Foi carregado o servidor ${data.guild.name} no banco de dados, porém não foi possível recuperar, atualize os canais ou busque pelo servidor para poder enviar mensagem no mesmo.`,
+                    {
+                        clickToClose: true,
+                        pauseOnHover: true,
+                    },
+                );
+            }
+        });
     }, []);
 
     useEffect(() => {

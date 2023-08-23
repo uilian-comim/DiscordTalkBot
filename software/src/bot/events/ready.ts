@@ -1,6 +1,7 @@
 import { Client } from "discord.js";
 import { sign } from "jsonwebtoken";
 import api from "src/bot/api";
+import io from "src/socket";
 
 export default async (client: Client) => {
     try {
@@ -36,24 +37,46 @@ export default async (client: Client) => {
 
             if (result.status === 200) {
                 const channels = await fullGuild.channels.fetch();
-                channels.map(async (channel, _) => {
-                    if (!channel) return;
+                const fullChannels = await Promise.all(
+                    channels.map(async (channel, _) => {
+                        if (!channel) return;
 
-                    const result2 = await fetch(`${api}/channels/create`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${access_token}`,
-                        },
-                        body: JSON.stringify({
+                        const result2 = await fetch(`${api}/channels/create`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${access_token}`,
+                            },
+                            body: JSON.stringify({
+                                channel_id: channel.id,
+                                guild_id: response.guild_id,
+                            }),
+                        });
+
+                        const response2 = await result2.json();
+
+                        console.log(`[${channel.name}] ${response2.message}`);
+
+                        return {
                             channel_id: channel.id,
+                            channel_name: channel.name,
                             guild_id: response.guild_id,
-                        }),
-                    });
+                        };
+                    }),
+                );
 
-                    const response2 = await result2.json();
-
-                    console.log(`[${channel.name}] ${response2.message}`);
+                io.to(guild.client.user.id).emit("guild:ready", {
+                    message: `Bot adicionado ao servidor: ${guild.name}.`,
+                    guild: {
+                        id: response.guild_id,
+                        guild_id: guild.id,
+                        name: guild.name,
+                        avatar_url: guild.iconURL({ extension: "png" }),
+                        favorite: 0,
+                        created_at: new Date().toISOString(),
+                        channels_guild: fullChannels,
+                        bot_id: guild.client.user.id,
+                    },
                 });
             }
         });
@@ -61,5 +84,7 @@ export default async (client: Client) => {
     } catch (err: any) {
         console.log("Erro ao iniciar o bot.");
         console.log(err);
+    } finally {
+        console.log("Bot iniciado.");
     }
 };
