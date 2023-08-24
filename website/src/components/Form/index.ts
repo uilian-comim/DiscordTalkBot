@@ -3,6 +3,7 @@ import { CheckBox } from "./CheckBox";
 import { Input } from "./Input";
 import { Label } from "./Label";
 import { Link } from "./Link";
+import { Radio } from "./Radio";
 import { Select } from "./Select";
 
 export const Form = {
@@ -12,4 +13,5 @@ export const Form = {
     CheckBox,
     Link,
     Select,
+    Radio,
 };

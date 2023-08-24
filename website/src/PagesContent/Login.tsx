@@ -7,6 +7,7 @@ import { schemas } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Cookies from "js-cookie";
 import { Loading, Notify } from "notiflix";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BiLinkExternal } from "react-icons/bi";
 import { MdLogin } from "react-icons/md";
@@ -15,7 +16,19 @@ import { InferType } from "yup";
 type FormData = InferType<typeof schemas.signin>;
 
 export function LoginContent() {
+    const [typeToken, setTypeToken] = useState<string>("digite");
+    const [tokens, setTokens] = useState<string[]>([]); // ["client:username-token"]
     const { SetClient } = useAuth();
+
+    useEffect(() => {
+        const tokens = Cookies.get("tokens");
+        if (tokens) {
+            const tokensArray = tokens.split(",");
+            setTokens(tokensArray);
+        } else {
+            setTypeToken("digite");
+        }
+    }, []);
 
     const signInForm = useForm<FormData>({
         resolver: yupResolver(schemas.signin),
@@ -61,10 +74,24 @@ export function LoginContent() {
     return (
         <FormProvider {...signInForm}>
             <form className="w-full flex flex-col items-center justify-center gap-4" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-                <div className="form-control w-full">
-                    <Form.Label text="Bot Token" htmlFor="token" />
-                    <Form.Input name="token" placeholder="Digite aqui..." />
-                </div>
+                {typeToken === "digite" ? (
+                    <div className="form-control w-full">
+                        <Form.Label text="Bot Token" htmlFor="token" />
+                        <Form.Input name="token" placeholder="Digite aqui..." onFocus={(e) => (e.target.value = "")} />
+                    </div>
+                ) : (
+                    <div className="form-control w-full">
+                        <Form.Label text="Bot Token" htmlFor="token" />
+                        <Form.Select name="token">
+                            {tokens.map((token) => (
+                                <option key={token.split("-")[1]} value={token.split("-")[1]}>
+                                    {token.split("-")[0].split(":")[1]}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    </div>
+                )}
+                {tokens.length > 0 && <Form.Radio setTypeToken={setTypeToken} value={typeToken} />}
                 <div className="w-full flex flex-col items-start justify-center gap-2 self-start">
                     <Form.CheckBox name="save" text="Salvar Token" containerAddClass="w-full" />
                     <Form.CheckBox name="keep" text="Manter logado" containerAddClass="w-full" />
