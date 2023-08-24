@@ -13,8 +13,8 @@ RUN npm install
 # Copia todos os arquivos do projeto para o diretório de trabalho
 COPY . .
 
-# # Compila o projeto Next.js
-# RUN npm run build
+# Compila o projeto Next.js
+RUN npm run build
 
 # Comando para iniciar o servidor Next.js
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "start" ]
