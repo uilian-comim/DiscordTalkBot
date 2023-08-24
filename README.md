@@ -1,11 +1,17 @@
 # DISCORD TALK BOT
 
+## Introdução
+
 O projeto Discord Talk Bot é uma plataforma que oferece uma interface simples e eficaz para se comunicar através de chats de texto em servidores e canais privados no Discord. Com o Discord Talk Bot, você pode interagir facilmente com outros usuários que estejam no mesmo servidor compartilhado.
 
-## Tabela de Conteúdos
+## Links Rápidos
 
--   [Introdução](#introdução)
+-   [Introdução](#Introdução)
 -   [Tecnologias Utilizadas](#tecnologias-utilizadas)
+-   [Requisitos](#requisitos)
+-   [Configuração](#configuração)
+-   [Instalação](#instalação)
+-   [Inicialização](#inicialização-simples)
 
 ## Tecnologias Utilizadas
 
@@ -28,7 +34,7 @@ O projeto Discord Talk Bot é uma plataforma que oferece uma interface simples e
 
 ### Linguagem
 
--   [Typescript](https://www.typescriptlang.org/)
+-   [Javascript | Typescript](https://www.typescriptlang.org/)
 
 ## Requisitos
 
@@ -36,20 +42,52 @@ O projeto Discord Talk Bot é uma plataforma que oferece uma interface simples e
 -   [Docker](https://www.docker.com/)
 -   [Discord Developer](https://discord.com/developers/applications)
 
-## Instalação
+## Configuração
+
+### Variáveis de Ambiente
+
+-   Crie um arquivo `.env` na pasta `software` e preencha as variáveis de ambiente de acordo com o arquivo `.env.example`.
+
+### Instalação
 
 ```bash
-    # Instalar dependências
-    $ yarn install ou npm install
-
-    # Iniciar o projeto
-    $ yarn dev ou npm run dev
-
-    # Configurar banco de dados
-    $ yarn push ou npm run push
-
-    # Iniciar o servidor
-    $ yarn dev ou npm run dev
+npm install ou pnpm install ou yarn install
 ```
 
-## Configuração
+## Inicialização
+
+### Front End
+
+```bash
+npm run dev ou pnpm run dev ou yarn dev
+```
+
+### Back End
+
+-   Antes de iniciar o servidor, é necessário criar um banco de dados mysql.
+
+-   Após a criação do banco de dados, configure o arquivo `.env` com as informações do banco de dados.
+
+-   Após a configuração do banco de dados, execute o comando abaixo para criar as tabelas no banco de dados.
+
+```bash
+npx prisma db push
+```
+
+```bash
+npm run dev ou pnpm run dev ou yarn dev
+```
+
+## Inicialização simples
+
+-   Para uma inicialização simples, é necessário ter o docker instalado na máquina.
+
+-   Após a instalação do docker, execute o comando abaixo para iniciar o projeto.
+
+```bash
+docker-compose up -d
+```
+
+## Licença
+
+Copyright 2023 Uilian Comim
